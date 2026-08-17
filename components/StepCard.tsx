@@ -9,7 +9,11 @@ interface StepCardProps {
   children: ReactNode;
 }
 
-export default function StepCard({ stepNumber, totalSteps, children }: StepCardProps) {
+export default function StepCard({
+  stepNumber,
+  totalSteps,
+  children,
+}: StepCardProps) {
   const progress = (stepNumber / totalSteps) * 100;
 
   return (
@@ -21,12 +25,14 @@ export default function StepCard({ stepNumber, totalSteps, children }: StepCardP
       className="w-full"
     >
       {/* Progress Bar */}
-      <div className="mb-6 w-full">
+      <div className="mb-4 sm:mb-6 w-full">
         <div className="flex justify-between mb-2">
           <span className="text-sm font-semibold text-pink-600">
             Step {stepNumber} of {totalSteps}
           </span>
-          <span className="text-sm font-semibold text-pink-600">{progress.toFixed(0)}%</span>
+          <span className="text-sm font-semibold text-pink-600">
+            {progress.toFixed(0)}%
+          </span>
         </div>
         <div className="w-full bg-pink-100 rounded-full h-2 overflow-hidden">
           <motion.div
