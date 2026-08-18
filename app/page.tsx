@@ -50,6 +50,21 @@ const fadeInUp = {
   transition: { duration: 0.5 },
 };
 
+const isWeekday = (date: Date | null) => {
+  if (!date) return false;
+  const day = date.getDay();
+  return day >= 1 && day <= 5;
+};
+
+const isWorkHour = (hour: string, ampm: string) => {
+  if (ampm !== "PM") return false;
+  const h = Number(hour);
+  return h >= 2 && h <= 10;
+};
+
+const isWorkTime = (date: Date | null, hour: string, ampm: string) =>
+  isWeekday(date) && isWorkHour(hour, ampm);
+
 export default function EnchantingDateProposalApp() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Answers>({
@@ -177,34 +192,45 @@ export default function EnchantingDateProposalApp() {
             onSelect={(date) => setAnswers({ ...answers, date: date || null })}
             className="mx-auto mb-4 w-full max-w-md"
           />
+          <p className="mt-4 text-sm sm:text-base text-pink-600 leading-relaxed">
+            I work Monday–Friday from 2 PM to 10 PM, so those times are disabled
+          </p>
           <div className="flex gap-2 sm:gap-3 justify-center mt-4">
-            <Select onValueChange={(val) => setHour(val)}>
+            <Select value={hour} onValueChange={(val) => setHour(val)}>
               <SelectTrigger className="min-w-0 flex-1 sm:w-24 sm:flex-none bg-pink-50 border-pink-200 text-pink-700 px-2 sm:px-3">
                 <SelectValue placeholder="Hour" />
               </SelectTrigger>
               <SelectContent>
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
-                  <SelectItem key={h} value={`${h}`}>
+                  <SelectItem
+                    key={h}
+                    value={`${h}`}
+                    disabled={isWorkTime(answers.date, `${h}`, ampm)}
+                  >
                     {h}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
-            <Select onValueChange={(val) => setMinute(val)}>
+            <Select value={minute} onValueChange={(val) => setMinute(val)}>
               <SelectTrigger className="min-w-0 flex-1 sm:w-20 sm:flex-none bg-pink-50 border-pink-200 text-pink-700 px-2 sm:px-3">
                 <SelectValue placeholder="Min" />
               </SelectTrigger>
               <SelectContent>
                 {["00", "15", "30", "45"].map((m) => (
-                  <SelectItem key={m} value={m}>
+                  <SelectItem
+                    key={m}
+                    value={m}
+                    disabled={isWorkTime(answers.date, hour, ampm)}
+                  >
                     {m}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
-            <Select onValueChange={(val) => setAmpm(val)}>
+            <Select value={ampm} onValueChange={(val) => setAmpm(val)}>
               <SelectTrigger className="min-w-0 flex-1 sm:w-20 sm:flex-none bg-pink-50 border-pink-200 text-pink-700 px-2 sm:px-3">
                 <SelectValue placeholder="AM/PM" />
               </SelectTrigger>
@@ -217,10 +243,32 @@ export default function EnchantingDateProposalApp() {
               </SelectContent>
             </Select>
           </div>
+          {isWorkTime(answers.date, hour, ampm) && (
+            <div className="flex flex-col items-center justify-center">
+              <p className="mt-3 text-sm font-semibold text-rose-500">
+                I&apos;m working then — please pick a time outside 2 PM–10 PM
+              </p>
+              <motion.img
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                style={{
+                  maxWidth: "200px",
+                }}
+                src="https://media1.tenor.com/m/mb1SfIYLEzEAAAAC/cat-praying-praying-cat.gif"
+                alt="Sad bear gif"
+                className="w-full max-w-xs sm:max-w-md mx-auto mb-4 rounded-lg shadow-lg"
+              />
+            </div>
+          )}
         </div>
         <Button
           onClick={() => setStep(step + 1)}
-          disabled={!answers.date || !answers.time}
+          disabled={
+            !answers.date ||
+            !answers.time ||
+            isWorkTime(answers.date, hour, ampm)
+          }
           className="w-full sm:w-auto bg-gradient-to-r from-pink-500 to-rose-500 hover:brightness-95 text-white font-bold py-3 px-6 sm:px-8 rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
         >
           <Clock className="mr-2 h-5 w-5" /> Set our date!{" "}
