@@ -23,14 +23,14 @@ export async function POST(request: Request) {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_USER,
-      subject: '💕 New Date Response!',
+      subject: '💕 Новый ответ на приглашение!',
       html: `
-        <h1>She responded!</h1>
-        <p>Date: ${new Date(data.date).toLocaleDateString()}</p>
-        <p>Time: ${data.time}</p>
-        <p>Food: ${data.food.join(', ')}</p>
-        <p>Movie: ${data.movie}</p>
-        <p>Excitement: ${data.excitement}/100</p>
+        <h1>Она ответила!</h1>
+        <p>Дата: ${new Date(data.date).toLocaleDateString('ru-RU')}</p>
+        <p>Время: ${data.time}</p>
+        <p>Еда: ${data.food.join(', ')}</p>
+        <p>Фильм: ${data.movie}</p>
+        <p>Предвкушение: ${data.excitement}/100</p>
       `,
       attachments: [{
         filename: `date-response-${new Date().toISOString()}.json`,

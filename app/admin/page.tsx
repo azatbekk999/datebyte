@@ -40,7 +40,7 @@ export default function AdminPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl mx-auto w-full overflow-x-hidden">
-      <h1 className="text-2xl font-bold mb-4">Date Responses</h1>
+      <h1 className="text-2xl font-bold mb-4">Ответы на приглашение</h1>
 
       <div className="mb-8">
         <input
@@ -57,7 +57,7 @@ export default function AdminPage() {
       </div>
 
       {responses.length === 0 ? (
-        <p>Upload a response JSON file to view it!</p>
+        <p>Загрузите JSON-файл с ответом, чтобы посмотреть его!</p>
       ) : (
         responses.map((response) => (
           <div
@@ -65,21 +65,22 @@ export default function AdminPage() {
             className="mb-8 p-4 border rounded bg-white shadow-lg"
           >
             <p className="text-lg font-semibold mb-2">
-              Response Time: {new Date(response.timestamp).toLocaleString()}
+              Время ответа:{" "}
+              {new Date(response.timestamp).toLocaleString("ru-RU")}
             </p>
             <div className="space-y-2 text-left">
               <p>
-                Date:{" "}
+                Дата:{" "}
                 {response.data.date
-                  ? new Date(response.data.date).toLocaleDateString()
-                  : "Not selected"}
+                  ? new Date(response.data.date).toLocaleDateString("ru-RU")
+                  : "Не выбрано"}
               </p>
-              <p>Time: {response.data.time || "Not selected"}</p>
+              <p>Время: {response.data.time || "Не выбрано"}</p>
               <p>
-                Food Choices: {response.data.food.join(", ") || "Not selected"}
+                Еда: {response.data.food.join(", ") || "Не выбрано"}
               </p>
-              <p>Movie: {response.data.movie || "Not selected"}</p>
-              <p>Excitement Level: {response.data.excitement}/100</p>
+              <p>Фильм: {response.data.movie || "Не выбрано"}</p>
+              <p>Уровень предвкушения: {response.data.excitement}/100</p>
             </div>
           </div>
         ))

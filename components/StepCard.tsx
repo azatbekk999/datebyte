@@ -28,7 +28,7 @@ export default function StepCard({
       <div className="mb-4 sm:mb-6 w-full">
         <div className="flex justify-between mb-2">
           <span className="text-sm font-semibold text-pink-600">
-            Step {stepNumber} of {totalSteps}
+            Шаг {stepNumber} из {totalSteps}
           </span>
           <span className="text-sm font-semibold text-pink-600">
             {progress.toFixed(0)}%

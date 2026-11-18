@@ -3,6 +3,7 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
+import { ru } from "date-fns/locale";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -17,6 +18,7 @@ function Calendar({
 }: CalendarProps) {
   return (
     <DayPicker
+      locale={ru}
       showOutsideDays={showOutsideDays}
       className={cn(
         "p-2 sm:p-6 bg-gradient-to-b from-white/50 to-pink-50/30 rounded-2xl backdrop-blur-sm w-full max-w-full",

@@ -56,14 +56,13 @@ const isWeekday = (date: Date | null) => {
   return day >= 1 && day <= 5;
 };
 
-const isWorkHour = (hour: string, ampm: string) => {
-  if (ampm !== "PM") return false;
+const isWorkHour = (hour: string) => {
   const h = Number(hour);
-  return h >= 2 && h <= 10;
+  return h >= 13 && h <= 22;
 };
 
-const isWorkTime = (date: Date | null, hour: string, ampm: string) =>
-  isWeekday(date) && isWorkHour(hour, ampm);
+const isWorkTime = (date: Date | null, hour: string) =>
+  isWeekday(date) && isWorkHour(hour);
 
 export default function EnchantingDateProposalApp() {
   const [step, setStep] = useState(0);
@@ -76,13 +75,14 @@ export default function EnchantingDateProposalApp() {
     excitement: 50,
   });
 
-  const [hour, setHour] = useState<string>("7");
+  const [hour, setHour] = useState<string>("19");
   const [minute, setMinute] = useState<string>("00");
-  const [ampm, setAmpm] = useState<string>("PM");
+  const [showCustomMovie, setShowCustomMovie] = useState(false);
+  const [customMovie, setCustomMovie] = useState("");
 
   useEffect(() => {
-    setAnswers((prev) => ({ ...prev, time: `${hour}:${minute} ${ampm}` }));
-  }, [hour, minute, ampm]);
+    setAnswers((prev) => ({ ...prev, time: `${hour}:${minute}` }));
+  }, [hour, minute]);
 
   const handleAnswer = (key: keyof Answers, value: Answers[keyof Answers]) => {
     setAnswers({ ...answers, [key]: value });
@@ -100,8 +100,8 @@ export default function EnchantingDateProposalApp() {
   const formatDate = (d: Date | null) => {
     if (!d) return "";
     try {
-      return d.toLocaleDateString(undefined, {
-        month: "short",
+      return d.toLocaleDateString("ru-RU", {
+        month: "long",
         day: "numeric",
       });
     } catch {
@@ -112,14 +112,14 @@ export default function EnchantingDateProposalApp() {
   const steps = [
     <motion.div key="step0" className="text-center" {...fadeInUp}>
       <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-rose-500">
-        Will you go on a date with me?
+        Пойдёшь со мной на свидание?
       </h1>
       <motion.img
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         src="https://media1.tenor.com/m/59regbBE_kwAAAAd/tkthao219-bubududu.gif"
-        alt="Cute bear proposal gif"
+        alt="Милый мишка зовёт на свидание"
         className="w-full max-w-xs sm:max-w-md mx-auto mb-4 rounded-lg shadow-lg"
       />
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
@@ -130,7 +130,7 @@ export default function EnchantingDateProposalApp() {
           }}
           className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-4 rounded-full transition-all duration-300 transform hover:scale-105"
         >
-          Yes, I&apos;d love to!
+          Да, с удовольствием!
         </Button>
         <Dialog>
           <DialogTrigger asChild>
@@ -138,16 +138,16 @@ export default function EnchantingDateProposalApp() {
               variant="outline"
               className="border-pink-300 text-pink-500 hover:bg-pink-100 font-bold py-3 px-4 rounded-full transition-all duration-300 transform hover:scale-105"
             >
-              No
+              Нет
             </Button>
           </DialogTrigger>
           <DialogContent className="bg-pink-50 border-2 border-pink-300">
             <DialogHeader>
               <DialogTitle className="text-xl sm:text-2xl font-bold text-pink-600">
-                There is no &quot;NOOOOOO&quot;
+                Никаких &quot;НЕЕЕЕЕТ&quot;
               </DialogTitle>
               <DialogDescription className="text-base sm:text-lg text-pink-500">
-                You must come with me!
+                Ты обязательно пойдёшь со мной!
               </DialogDescription>
             </DialogHeader>
             <motion.img
@@ -155,7 +155,7 @@ export default function EnchantingDateProposalApp() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
               src="https://media1.tenor.com/m/WqpiNQKLg48AAAAC/no.gif"
-              alt="Excited bear gif"
+              alt="Мишка говорит «нет»"
               className="w-full max-w-xs sm:max-w-md mx-auto mb-4 rounded-lg shadow-lg"
             />
             <Button
@@ -165,7 +165,7 @@ export default function EnchantingDateProposalApp() {
               }}
               className="w-full sm:w-auto bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-4 rounded-full transition-all duration-300 transform hover:scale-105"
             >
-              Okay, I&apos;ll come!
+              Ладно, я приду!
             </Button>
           </DialogContent>
         </Dialog>
@@ -175,14 +175,14 @@ export default function EnchantingDateProposalApp() {
     <motion.div key="step1" className="text-center" {...fadeInUp}>
       <StepCard stepNumber={1} totalSteps={6}>
         <h2 className="text-2xl sm:text-4xl md:text-5xl font-playfair font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-pink-600">
-          YEYYYYYYYY, WHEN SHALL WE GO?
+          УРАААААА, КОГДА ПОЙДЁМ?
         </h2>
         <motion.img
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
           src="https://media.tenor.com/WiQQRwR2QFAAAAAi/cute-panda.gif"
-          alt="Excited bear gif"
+          alt="Радостная панда"
           className="w-full max-w-xs sm:max-w-md mx-auto mb-4 sm:mb-6 rounded-2xl shadow-2xl shadow-pink-300/30"
         />
         <div className="mb-6 p-2 sm:p-4 bg-white rounded-lg shadow-lg overflow-x-auto">
@@ -190,22 +190,25 @@ export default function EnchantingDateProposalApp() {
             mode="single"
             selected={answers.date || undefined}
             onSelect={(date) => setAnswers({ ...answers, date: date || null })}
+            disabled={{ before: new Date() }}
+            fromMonth={new Date()}
             className="mx-auto mb-4 w-full max-w-md"
           />
           <p className="mt-4 text-sm sm:text-base text-pink-600 leading-relaxed">
-            I work Monday–Friday from 2 PM to 10 PM, so those times are disabled
+            С понедельника по пятницу я работаю с 13:00 до 22:00, поэтому это
+            время недоступно
           </p>
           <div className="flex gap-2 sm:gap-3 justify-center mt-4">
             <Select value={hour} onValueChange={(val) => setHour(val)}>
               <SelectTrigger className="min-w-0 flex-1 sm:w-24 sm:flex-none bg-pink-50 border-pink-200 text-pink-700 px-2 sm:px-3">
-                <SelectValue placeholder="Hour" />
+                <SelectValue placeholder="Час" />
               </SelectTrigger>
               <SelectContent>
-                {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
+                {Array.from({ length: 24 }, (_, i) => i).map((h) => (
                   <SelectItem
                     key={h}
                     value={`${h}`}
-                    disabled={isWorkTime(answers.date, `${h}`, ampm)}
+                    disabled={isWorkTime(answers.date, `${h}`)}
                   >
                     {h}
                   </SelectItem>
@@ -215,38 +218,26 @@ export default function EnchantingDateProposalApp() {
 
             <Select value={minute} onValueChange={(val) => setMinute(val)}>
               <SelectTrigger className="min-w-0 flex-1 sm:w-20 sm:flex-none bg-pink-50 border-pink-200 text-pink-700 px-2 sm:px-3">
-                <SelectValue placeholder="Min" />
+                <SelectValue placeholder="Мин" />
               </SelectTrigger>
               <SelectContent>
                 {["00", "15", "30", "45"].map((m) => (
                   <SelectItem
                     key={m}
                     value={m}
-                    disabled={isWorkTime(answers.date, hour, ampm)}
+                    disabled={isWorkTime(answers.date, hour)}
                   >
                     {m}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-
-            <Select value={ampm} onValueChange={(val) => setAmpm(val)}>
-              <SelectTrigger className="min-w-0 flex-1 sm:w-20 sm:flex-none bg-pink-50 border-pink-200 text-pink-700 px-2 sm:px-3">
-                <SelectValue placeholder="AM/PM" />
-              </SelectTrigger>
-              <SelectContent>
-                {["AM", "PM"].map((ap) => (
-                  <SelectItem key={ap} value={ap}>
-                    {ap}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
-          {isWorkTime(answers.date, hour, ampm) && (
+          {isWorkTime(answers.date, hour) && (
             <div className="flex flex-col items-center justify-center">
               <p className="mt-3 text-sm font-semibold text-rose-500">
-                I&apos;m working then — please pick a time outside 2 PM–10 PM
+                В это время я на работе — выбери, пожалуйста, время вне
+                промежутка 13:00–22:00
               </p>
               <motion.img
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -256,7 +247,7 @@ export default function EnchantingDateProposalApp() {
                   maxWidth: "200px",
                 }}
                 src="https://media1.tenor.com/m/mb1SfIYLEzEAAAAC/cat-praying-praying-cat.gif"
-                alt="Sad bear gif"
+                alt="Котик молится"
                 className="w-full max-w-xs sm:max-w-md mx-auto mb-4 rounded-lg shadow-lg"
               />
             </div>
@@ -267,11 +258,11 @@ export default function EnchantingDateProposalApp() {
           disabled={
             !answers.date ||
             !answers.time ||
-            isWorkTime(answers.date, hour, ampm)
+            isWorkTime(answers.date, hour)
           }
           className="w-full sm:w-auto bg-gradient-to-r from-pink-500 to-rose-500 hover:brightness-95 text-white font-bold py-3 px-6 sm:px-8 rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
         >
-          <Clock className="mr-2 h-5 w-5" /> Set our date!{" "}
+          <Clock className="mr-2 h-5 w-5" /> Назначим свидание!{" "}
           <Heart className="ml-2 h-5 w-5" />
         </Button>
       </StepCard>
@@ -280,27 +271,27 @@ export default function EnchantingDateProposalApp() {
     <motion.div key="step2" className="text-center" {...fadeInUp}>
       <StepCard stepNumber={2} totalSteps={6}>
         <h2 className="text-2xl sm:text-4xl md:text-5xl font-playfair font-bold mb-4 sm:mb-8 bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-pink-600">
-          What shall we feast on, my dear?
+          Чем будем лакомиться, моя дорогая?
         </h2>
         <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
           {[
-            { name: "Pizza", icon: <Utensils className="w-6 h-6" /> },
-            { name: "Pasta", icon: <Utensils className="w-6 h-6" /> },
-            { name: "Macaroni", icon: <Utensils className="w-6 h-6" /> },
-            { name: "Lasagna", icon: <Utensils className="w-6 h-6" /> },
+            { name: "Пицца", icon: <Utensils className="w-6 h-6" /> },
+            { name: "Паста", icon: <Utensils className="w-6 h-6" /> },
+            { name: "Макароны", icon: <Utensils className="w-6 h-6" /> },
+            { name: "Лазанья", icon: <Utensils className="w-6 h-6" /> },
             {
-              name: "Sweet and Sour Chicken",
+              name: "Курица в кисло-сладком соусе",
               icon: <Utensils className="w-6 h-6" />,
             },
-            { name: "Lagman", icon: <Utensils className="w-6 h-6" /> },
-            { name: "Plov", icon: <Utensils className="w-6 h-6" /> },
-            { name: "Manty", icon: <Utensils className="w-6 h-6" /> },
-            { name: "Shawarma", icon: <Utensils className="w-6 h-6" /> },
-            { name: "Burgers", icon: <Utensils className="w-6 h-6" /> },
-            { name: "Sushi", icon: <Utensils className="w-6 h-6" /> },
-            { name: "Mix Rice", icon: <Utensils className="w-6 h-6" /> },
-            { name: "Khachapuri", icon: <Utensils className="w-6 h-6" /> },
-            { name: "Snack Platter", icon: <Coffee className="w-6 h-6" /> },
+            { name: "Лагман", icon: <Utensils className="w-6 h-6" /> },
+            { name: "Плов", icon: <Utensils className="w-6 h-6" /> },
+            { name: "Манты", icon: <Utensils className="w-6 h-6" /> },
+            { name: "Шаурма", icon: <Utensils className="w-6 h-6" /> },
+            { name: "Бургеры", icon: <Utensils className="w-6 h-6" /> },
+            { name: "Суши", icon: <Utensils className="w-6 h-6" /> },
+            { name: "Микс-рис", icon: <Utensils className="w-6 h-6" /> },
+            { name: "Хачапури", icon: <Utensils className="w-6 h-6" /> },
+            { name: "Ассорти закусок", icon: <Coffee className="w-6 h-6" /> },
           ].map(({ name, icon }) => (
             <SelectButton
               key={name}
@@ -321,27 +312,35 @@ export default function EnchantingDateProposalApp() {
           disabled={answers.food.length === 0}
           className="w-full sm:w-auto bg-gradient-to-r from-pink-500 to-rose-500 hover:brightness-95 text-white font-bold py-3 px-6 sm:px-8 rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
         >
-          Looks delicious! 🍽️
+          Выглядит вкусно! 🍽️
         </Button>
       </StepCard>
     </motion.div>,
 
     <motion.div key="step3" className="text-center" {...fadeInUp}>
       <h2 className="text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-pink-600">
-        What shall we watch together?
+        Что посмотрим вместе?
       </h2>
       <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-6 mb-6">
         {[
-          "Spider-Man: Brand New Day",
-          "The Odyssey",
-          "One Night Only",
-          "All That We Never Were",
-          "Moana",
-          "La La Land",
-          "Anyone But You",
-          "Your Name",
-          "Challengers",
-          "Something else",
+          "Айтматов",
+          "Мончок",
+          "Кот в шляпе",
+          "Кул",
+          "Тайке",
+          "Психопатка",
+          "Рамаяна: Восхождение легенды",
+          "Плетёный муж",
+          "Скрудж",
+          "Инфлюенсер",
+          "Дюна. Часть первая",
+          "Шкатулка проклятия. Зло внутри",
+          "Как поймать Деда Мороза",
+          "Зверь",
+          "Фьорд",
+          "Кит: Во тьме глубин",
+          "Остров забвения",
+          "Что-то другое",
         ].map((movie) => (
           <motion.button
             key={movie}
@@ -349,11 +348,8 @@ export default function EnchantingDateProposalApp() {
             whileTap={{ scale: 0.95 }}
             className="bg-white text-pink-600 hover:bg-pink-100 font-bold py-3 px-2 sm:py-4 sm:px-6 rounded-lg shadow-md transition-colors duration-300 text-xs sm:text-sm leading-tight break-words min-h-16"
             onClick={() => {
-              if (movie === "Something else") {
-                const customMovie = prompt(
-                  "What movie would you like to watch?"
-                );
-                if (customMovie) handleAnswer("movie", customMovie);
+              if (movie === "Что-то другое") {
+                setShowCustomMovie(true);
               } else {
                 handleAnswer("movie", movie);
               }
@@ -364,12 +360,40 @@ export default function EnchantingDateProposalApp() {
           </motion.button>
         ))}
       </div>
+      {showCustomMovie && (
+        <motion.form
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const movie = customMovie.trim();
+            if (movie) handleAnswer("movie", movie);
+          }}
+        >
+          <input
+            type="text"
+            autoFocus
+            value={customMovie}
+            onChange={(e) => setCustomMovie(e.target.value)}
+            placeholder="Какой фильм ты хочешь посмотреть?"
+            className="flex-1 min-w-0 rounded-full border border-pink-200 bg-white px-4 py-3 text-base text-pink-700 placeholder:text-pink-300 shadow-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+          />
+          <Button
+            type="submit"
+            disabled={!customMovie.trim()}
+            className="bg-gradient-to-r from-pink-500 to-rose-500 hover:brightness-95 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+          >
+            Выбрать 🎬
+          </Button>
+        </motion.form>
+      )}
     </motion.div>,
 
     <motion.div key="step4" className="text-center" {...fadeInUp}>
       <StepCard stepNumber={4} totalSteps={6}>
         <h2 className="text-2xl sm:text-4xl md:text-5xl font-playfair font-bold mb-4 sm:mb-8 bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-pink-600">
-          How excited are you for our date?
+          Как сильно ты ждёшь нашего свидания?
         </h2>
         <div className="max-w-lg mx-auto mb-6 sm:mb-8 p-4 sm:p-8 bg-gradient-to-b from-white/80 to-pink-50/60 rounded-2xl shadow-lg border border-pink-100">
           <Slider
@@ -381,8 +405,8 @@ export default function EnchantingDateProposalApp() {
             }
           />
           <div className="flex justify-between gap-2 mt-4 sm:mt-6 text-[10px] sm:text-sm text-pink-600 font-semibold">
-            <span className="text-left">😐 Can&apos;t wait!</span>
-            <span className="text-right">🤩 Super duper excited!</span>
+            <span className="text-left">😐 Жду не дождусь!</span>
+            <span className="text-right">🤩 Я в полном восторге!</span>
           </div>
         </div>
         <motion.div
@@ -391,12 +415,12 @@ export default function EnchantingDateProposalApp() {
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
         >
-          Excitement level:{" "}
+          Уровень предвкушения:{" "}
           <span className="text-rose-500">{answers.excitement}%</span>
         </motion.div>
         {answers.excitement === 0 && (
           <p className="text-lg text-rose-500 font-semibold mb-4">
-            There&apos;s no point in going out like this
+            С таким настроем нет смысла идти
           </p>
         )}
         <Button
@@ -407,7 +431,7 @@ export default function EnchantingDateProposalApp() {
           disabled={answers.excitement === 0}
           className="w-full sm:w-auto bg-gradient-to-r from-pink-500 to-rose-500 hover:brightness-95 text-white font-bold py-3 px-6 sm:px-8 rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
         >
-          Let&apos;s make it official! 💕
+          Решено, это официально! 💕
         </Button>
       </StepCard>
     </motion.div>,
@@ -415,10 +439,10 @@ export default function EnchantingDateProposalApp() {
     <motion.div key="step5" className="text-center" {...fadeInUp}>
       <StepCard stepNumber={6} totalSteps={6}>
         <h2 className="text-3xl sm:text-5xl md:text-6xl font-playfair font-bold mb-4 sm:mb-8 bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-rose-500">
-          It&apos;s a date, my love!
+          Свидание назначено, любимая!
         </h2>
         <p className="text-base sm:text-lg text-rose-500 mb-3 font-poppins">
-          I can&apos;t wait to see you on:
+          Не могу дождаться нашей встречи:
         </p>
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
@@ -427,7 +451,7 @@ export default function EnchantingDateProposalApp() {
           className="inline-block max-w-full bg-gradient-to-r from-pink-100 to-rose-100 px-4 sm:px-6 py-3 sm:py-4 rounded-2xl border border-pink-200 mb-6 sm:mb-8"
         >
           <p className="text-xl sm:text-3xl font-playfair font-bold text-pink-700 break-words">
-            {formatDate(answers.date)} at {answers.time}
+            {formatDate(answers.date)} в {answers.time}
           </p>
         </motion.div>
         <motion.img
@@ -435,7 +459,7 @@ export default function EnchantingDateProposalApp() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
           src="https://media.tenor.com/yvUCU981VYoAAAAj/mochi-cat-goma.gif"
-          alt="Excited bear gif"
+          alt="Радостный котик"
           className="w-full max-w-xs sm:max-w-md mx-auto mb-6 rounded-2xl shadow-2xl shadow-pink-300/30"
         />
         <motion.div
@@ -457,18 +481,18 @@ export default function EnchantingDateProposalApp() {
           className="mt-8 space-y-3 text-lg text-pink-600 font-poppins"
         >
           <p className="text-base">
-            We&apos;ll enjoy some delicious{" "}
+            Мы вкусно поедим:{" "}
             <span className="font-semibold">{answers.food.join(", ")}</span>.
           </p>
           <p className="text-base">
-            Then we&apos;ll watch{" "}
+            Потом вместе посмотрим{" "}
             <span className="font-semibold italic">
-              &quot;{answers.movie}&quot;
-            </span>{" "}
-            together.
+              &laquo;{answers.movie}&raquo;
+            </span>
+            .
           </p>
           <p className="text-xl font-playfair font-bold mt-6">
-            Your excitement level:{" "}
+            Твой уровень предвкушения:{" "}
             <span className="text-rose-600">{answers.excitement}/100</span>
           </p>
         </motion.div>
